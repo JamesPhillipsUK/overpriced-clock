@@ -13,7 +13,7 @@ import datetime # It's a clock.
 def launchEventLoop(window):
   """
   This method contains the event loop for the application.  It takes the applications window as a parameter.
-  
+
   Parameters
   ----------
   window: window
@@ -24,7 +24,7 @@ def launchEventLoop(window):
     event, values = window.read(timeout = 1000) # Only need to update once per second.
     if event == psg.WIN_CLOSED:
       break # End the event runtime if the user requests to close the window.
-    
+
     window['time'].update(datetime.datetime.now().strftime('%H:%M:%S')) # Update the clock.
 
     # Display a nice message to the user.
@@ -53,6 +53,6 @@ def main():
   window = psg.Window(title="Clock", layout=layout, size=(1024, 600), element_justification='c', finalize = True) # Build the application window.
   window.Maximize()
   launchEventLoop(window) # Run the event loop for the application on the window.
-  
+
 if __name__ == "__main__":
   main()
