@@ -17,11 +17,11 @@ Simply run the clock.py script, and the clock should pop open in a window.  If y
 - [SunFounder 7" 1024x600 LCD Touchscreen display](https://www.sunfounder.com/collections/raspberry-pi-store/products/7inch-ips-touchscreen).
 - Command hooks and thread to mount the screen, and a Command picture-hanging strip for the Pi.
 
-![Image of the clock in action](https://example.com/example.png)
+![Image of the clock in action](doc/images/overpriced-clock.jpg)
 
 _Above: an image of the clock in action._
 
-## Like what you see?  Buy me a snack ##
+## Like what you see?  Buy me a snack
 
 If you want to see more of what I do, you can visit [my blog](https://jamesphillipsuk.com "Go there now").
 
