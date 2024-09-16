@@ -1,69 +1,87 @@
-""" clock.py
+"""clock.py
+A simple Python-powered clock for my Raspberry Pi.  Using PyQt5.
 
-A simple Python-powered clock for my Raspberry Pi.
-Using PySimpleGUI to make it look nice.
-
-Authors: Jesse Phillips <james@jamesphillipsuk.com>
-
+Author: Jesse Phillips <jesse@jessephillips.uk>
 """
-import PySimpleGUI as psg  # PySimpleGUI UI Library
+from PyQt5.QtCore import QSize, QTimer, Qt
+from PyQt5.QtGui import QFont
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QDesktopWidget
 import datetime
+import time
+import sys
 
 
-def launchEventLoop(window: psg.Window):
-    """ This method contains the event loop for the application.
-    It takes the applications window as a parameter.
+class MainWindow(QMainWindow):
+    greeting = ""
+    time = ""
+    font = QFont()
+    largeFont = QFont()
+    def __init__(self):
+        super().__init__()
+        
+        self.setWindowTitle("Clock")
+        self.setStyleSheet("background-color: #212121; color:#FFBF00;")
+        
+        self.font.setFamily("Ubuntu")
+        self.font.setBold(True)
+        self.font.setPointSize(64)
+        
+        self.largeFont.setFamily("Ubuntu")
+        self.largeFont.setBold(True)
+        self.largeFont.setPointSize(128)
+        
+        self.introLabel = QLabel(self)
+        self.timeLabel = QLabel(self)
+        self.greetingLabel = QLabel(self)
 
-    Args:
-        window (psg.Window): The application window.
-    """
-    # BEGIN THE EVENT LOOP
-    while True:
-        event, values = window.read(timeout=1000)  # Update once per second.
-        if event == psg.WIN_CLOSED:
-            break  # End the event runtime if the user closes the window.
-
-        window['time'].update(datetime.datetime.now().strftime('%H:%M:%S'))
-
-        # Display a nice message to the user.
+        timer = QTimer(self)
+        timer.setSingleShot(False)
+        timer.timeout.connect(self.setContents)
+        timer.start(1000)
+        
+    def setContents(self):
+        self.time = datetime.datetime.now().strftime('%H:%M:%S') # Update the clock.
         now = datetime.datetime.now().time()
         if now < datetime.time(12) and now >= datetime.time(6):
-            window['greeting'].update("Good morning")
+            self.greeting = "Good morning"
         elif now >= datetime.time(12) and now < datetime.time(18):
-            window['greeting'].update("Good afternoon")
+            self.greeting = "Good afternoon"
         elif now >= datetime.time(18) and now < datetime.time(22):
-            window['greeting'].update("Good evening")
+            self.greeting = "Good evening"
         else:
-            window['greeting'].update("Good night")
-    # KILL THE WINDOW ONCE THE EVENT RUNTIME IS OVER.
-    window.close()
+            self.greeting = "Good night"
+        
+        self.introLabel.setText("The time is:")
+        self.introLabel.setFont(self.font)
+        self.introLabel.adjustSize()
+        x = int((self.width() / 2) - (self.introLabel.width() / 2))
+        y = int((self.height() / 3) - (self.introLabel.height()))
+        self.introLabel.move(x, y)
+        
+        self.timeLabel.setText(self.time)
+        self.timeLabel.setFont(self.largeFont)
+        self.timeLabel.adjustSize()
+        x = int((self.width() / 2) - (self.timeLabel.width() / 2))
+        y = int((self.height() / 2) - (self.timeLabel.height() / 2))
+        self.timeLabel.move(x, y)
+        
+        self.greetingLabel.setText(self.greeting)
+        self.greetingLabel.setFont(self.font)
+        self.greetingLabel.adjustSize()
+        x = int((self.width() / 2) - (self.greetingLabel.width() / 2))
+        y = int(2 * (self.height() / 3))
+        self.greetingLabel.move(x, y)
 
 
 def main():
-    """Main method for the application.
     """
-    psg.theme('DarkAmber')  # Set the theme, easy on the eyes.
-    layout = [  # The Window layout.  Filled with default values.
-        [psg.Text("The time is:", font='Ubuntu 100', justification='center')],
-        [psg.Text("00:00:00",
-                  size=(8, 1),
-                  font='Ubuntu 165 bold',
-                  justification='center',
-                  key='time')],
-        [psg.Text("Good morning",
-                  size=(15, 1),
-                  font='Ubuntu 96',
-                  justification='center',
-                  key='greeting')]
-    ]
-    window = psg.Window(title="Clock",
-                        layout=layout,
-                        size=(1024, 600),
-                        element_justification='c',
-                        finalize=True)  # Build the application window.
-    window.Maximize()
-    launchEventLoop(window)  # Run the event loop for the application.
+    Main method for the application.
+    """
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.showFullScreen()
+    app.exec()
 
 
 if __name__ == "__main__":
-    main()
+  main()
