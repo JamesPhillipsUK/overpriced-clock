@@ -3,11 +3,10 @@ A simple Python-powered clock for my Raspberry Pi.  Using PyQt5.
 
 Author: Jesse Phillips <jesse@jessephillips.uk>
 """
-from PyQt5.QtCore import QSize, QTimer, Qt
+from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QDesktopWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
 import datetime
-import time
 import sys
 
 
@@ -16,20 +15,21 @@ class MainWindow(QMainWindow):
     time = ""
     font = QFont()
     largeFont = QFont()
+
     def __init__(self):
         super().__init__()
-        
+
         self.setWindowTitle("Clock")
         self.setStyleSheet("background-color: #212121; color:#FFBF00;")
-        
+
         self.font.setFamily("Ubuntu")
         self.font.setBold(True)
         self.font.setPointSize(64)
-        
+
         self.largeFont.setFamily("Ubuntu")
         self.largeFont.setBold(True)
         self.largeFont.setPointSize(128)
-        
+
         self.introLabel = QLabel(self)
         self.timeLabel = QLabel(self)
         self.greetingLabel = QLabel(self)
@@ -38,9 +38,9 @@ class MainWindow(QMainWindow):
         timer.setSingleShot(False)
         timer.timeout.connect(self.setContents)
         timer.start(1000)
-        
+
     def setContents(self):
-        self.time = datetime.datetime.now().strftime('%H:%M:%S') # Update the clock.
+        self.time = datetime.datetime.now().strftime('%H:%M:%S')
         now = datetime.datetime.now().time()
         if now < datetime.time(12) and now >= datetime.time(6):
             self.greeting = "Good morning"
@@ -50,21 +50,21 @@ class MainWindow(QMainWindow):
             self.greeting = "Good evening"
         else:
             self.greeting = "Good night"
-        
+
         self.introLabel.setText("The time is:")
         self.introLabel.setFont(self.font)
         self.introLabel.adjustSize()
         x = int((self.width() / 2) - (self.introLabel.width() / 2))
         y = int((self.height() / 3) - (self.introLabel.height()))
         self.introLabel.move(x, y)
-        
+
         self.timeLabel.setText(self.time)
         self.timeLabel.setFont(self.largeFont)
         self.timeLabel.adjustSize()
         x = int((self.width() / 2) - (self.timeLabel.width() / 2))
         y = int((self.height() / 2) - (self.timeLabel.height() / 2))
         self.timeLabel.move(x, y)
-        
+
         self.greetingLabel.setText(self.greeting)
         self.greetingLabel.setFont(self.font)
         self.greetingLabel.adjustSize()
@@ -84,4 +84,4 @@ def main():
 
 
 if __name__ == "__main__":
-  main()
+    main()
