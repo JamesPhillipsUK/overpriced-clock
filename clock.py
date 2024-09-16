@@ -6,32 +6,37 @@ Author: Jesse Phillips <jesse@jessephillips.uk>
 from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
+from easteregg import Egg
 import datetime
 import sys
 
 
 class MainWindow(QMainWindow):
+    argv = []
     greeting = ""
     time = ""
     font = QFont()
     largeFont = QFont()
 
-    def __init__(self):
+    def __init__(self, argv) -> None:
         """ Constructor for the clock's main window. Executed when clock opens.
         """
         super().__init__()
-
+        self.argv = argv
         self.setWindowTitle("Clock")
         self.setStyleSheet("background-color: #212121; color:#FFBF00;")
 
         self.setContents()
+        for flag in argv:
+            if flag == "-e":
+                self.easteregg = Egg()
 
         timer = QTimer(self)
         timer.setSingleShot(False)
         timer.timeout.connect(self.updateContents)
         timer.start(1000)
 
-    def setContents(self):
+    def setContents(self) -> None:
         """ Method to set the contents of the clock.
         """
         self.font.setFamily("Ubuntu")
@@ -49,7 +54,7 @@ class MainWindow(QMainWindow):
         self.greetingLabel = QLabel(self)
         self.greetingLabel.setFont(self.font)
 
-    def updateContents(self):
+    def updateContents(self) -> None:
         """ Method to update the contents of the clock.  Called every second.
         """
         self.time = datetime.datetime.now().strftime('%H:%M:%S')
@@ -82,14 +87,14 @@ class MainWindow(QMainWindow):
         self.greetingLabel.move(x, y)
 
 
-def main():
+def main(argv: list):
     """ Main method for the application.
     """
-    app = QApplication(sys.argv)
-    window = MainWindow()
+    app = QApplication(argv)
+    window = MainWindow(argv)
     window.showFullScreen()
     sys.exit(app.exec_())
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv)
